@@ -1,0 +1,5 @@
+alpaca-py-master/
+__pycache__/
+*.pyc
+.env
+data/

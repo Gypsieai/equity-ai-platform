@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EquityAI | AI-Driven Stock Selection & Portfolio Management</title>
+    <meta name="description"
+        content="Harness AI-powered insights to rank stocks, build robo-portfolios, and maximize your investment returns.">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon">📈</div>
+                <span>EquityAI</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#rankings">AI Rankings</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div class="nav-cta">
+                <button class="btn btn-secondary" id="loginBtn">Log In</button>
+                <button class="btn btn-primary" id="signupBtn">Start Free Trial</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>AI-Powered <span>Equity Intelligence</span></h1>
+                    <p>Proprietary AI models analyze financial statements, news sentiment, and market data to rank
+                        stocks and build optimal portfolios—automatically.</p>
+                    <div class="hero-buttons">
+                        <a href="#rankings" class="btn btn-primary">View AI Rankings</a>
+                        <a href="#pricing" class="btn btn-secondary">See Pricing</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" data-target="12500" data-suffix="+">0</div>
+                            <div class="stat-label">Stocks Analyzed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" data-target="94.7" data-suffix="%">0</div>
+                            <div class="stat-label">AI Accuracy</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" data-target="2.4" data-suffix="B">0</div>
+                            <div class="stat-label">AUM Managed</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-chart-card">
+                        <canvas id="heroChart" height="280"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ticker Tape -->
+    <div class="ticker-tape">
+        <div class="ticker-content" id="tickerContent">
+            <!-- Dynamic ticker items -->
+        </div>
+    </div>
+
+    <!-- Rankings Section -->
+    <section class="section rankings-section" id="rankings">
+        <div class="container">
+            <div class="section-header">
+                <h2>AI Stock Rankings</h2>
+                <p>Real-time rankings powered by our proprietary neural network that processes thousands of data points
+                    per second.</p>
+            </div>
+
+            <div class="rankings-controls">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="All">All Sectors</button>
+                    <button class="filter-tab" data-filter="Technology">Technology</button>
+                    <button class="filter-tab" data-filter="Financial Services">Finance</button>
+                    <button class="filter-tab" data-filter="Healthcare">Healthcare</button>
+                    <button class="filter-tab" data-filter="Energy">Energy</button>
+                </div>
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" id="stockSearch" placeholder="Search stocks...">
+                </div>
+            </div>
+
+            <div class="rankings-table-wrapper">
+                <table class="rankings-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Stock</th>
+                            <th>AI Score</th>
+                            <th>Price</th>
+                            <th>1D</th>
+                            <th>1W</th>
+                            <th>1M</th>
+                            <th>Sentiment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingsBody">
+                        <!-- Dynamic table rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Builder Section -->
+    <section class="section portfolio-section" id="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <h2>Robo-Portfolio Builder</h2>
+                <p>Select top-ranked stocks and let our AI optimize your portfolio allocation for maximum risk-adjusted
+                    returns.</p>
+            </div>
+
+            <div class="portfolio-grid">
+                <div class="portfolio-selector">
+                    <h3>Select Stocks & Allocations</h3>
+                    <div class="stock-select-list" id="stockSelectList">
+                        <!-- Dynamic stock items -->
+                    </div>
+                </div>
+                <div class="portfolio-preview">
+                    <h3>Portfolio Overview</h3>
+                    <div class="chart-container">
+                        <canvas id="portfolioChart"></canvas>
+                    </div>
+                    <div class="portfolio-summary">
+                        <div class="summary-item">
+                            <div class="value">0%</div>
+                            <div class="label">Total Allocated</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="value">0</div>
+                            <div class="label">Stocks Selected</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="value">0%</div>
+                            <div class="label">Projected Return</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="value">--</div>
+                            <div class="label">Risk Level</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section pricing-section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Investment Models</h2>
+                <p>Choose the plan that fits your investment strategy. All plans include full AI insights access.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Subscription Plan -->
+                <div class="pricing-card">
+                    <div class="pricing-icon">💎</div>
+                    <h3>Trader Pro</h3>
+                    <div class="price">$99<span>/month</span></div>
+                    <p class="description">Perfect for individual traders seeking AI-powered edge.</p>
+                    <ul class="pricing-features">
+                        <li>Full AI Stock Rankings</li>
+                        <li>Unlimited Portfolio Simulations</li>
+                        <li>Real-time Market Sentiment</li>
+                        <li>Email Alerts & Reports</li>
+                        <li>Priority Support</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Subscribe Now</a>
+                </div>
+
+                <!-- Equity Partnership -->
+                <div class="pricing-card featured">
+                    <div class="pricing-icon">🤝</div>
+                    <h3>Startup Partner</h3>
+                    <div class="price">Equity<span>1-2%</span></div>
+                    <p class="description">Free 1-month performance track in exchange for equity stake.</p>
+                    <ul class="pricing-features">
+                        <li>Full Platform Access</li>
+                        <li>Custom AI Model Training</li>
+                        <li>White-label Dashboard</li>
+                        <li>Dedicated Account Manager</li>
+                        <li>Investor Relations Reports</li>
+                    </ul>
+                    <a href="#" class="btn btn-primary">Apply for Partnership</a>
+                </div>
+
+                <!-- Affiliate -->
+                <div class="pricing-card">
+                    <div class="pricing-icon">🔗</div>
+                    <h3>Affiliate Program</h3>
+                    <div class="price">$5-10<span>/referral</span></div>
+                    <p class="description">Earn commission on every brokerage account opened via your link.</p>
+                    <ul class="pricing-features">
+                        <li>Unique Referral Link</li>
+                        <li>Real-time Tracking Dashboard</li>
+                        <li>Monthly Payouts</li>
+                        <li>Marketing Materials</li>
+                        <li>Tiered Bonus Structure</li>
+                    </ul>
+                    <a href="#" class="btn btn-secondary">Become an Affiliate</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">📈</div>
+                        <span>EquityAI</span>
+                    </a>
+                    <p>AI-driven equity intelligence for the modern investor. Data-powered decisions, human-level
+                        intuition.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li><a href="#rankings">AI Rankings</a></li>
+                        <li><a href="#portfolio">Portfolio Builder</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 EquityAI. All rights reserved.</p>
+                <p>Disclaimer: AI predictions are not financial advice.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close">&times;</button>
+            <h2>Welcome Back</h2>
+            <p>Log in to access your portfolio and AI insights.</p>
+            <form>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn btn-primary">Log In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <button class="modal-close">&times;</button>
+            <h2>Start Your Free Trial</h2>
+            <p>Get 14 days of full access. No credit card required.</p>
+            <form>
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create a password">
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Initialize Hero Chart
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroCtx = document.getElementById('heroChart');
+            if (heroCtx) {
+                new Chart(heroCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                        datasets: [{
+                            label: 'AI Portfolio',
+                            data: [100, 112, 108, 125, 138, 145, 168],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#3b82f6'
+                        }, {
+                            label: 'S&P 500',
+                            data: [100, 103, 101, 107, 110, 108, 115],
+                            borderColor: '#6b7280',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: '#9ca3af',
+                                    font: { family: 'Inter' }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#6b7280' }
+                            },
+                            y: {
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#6b7280' }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

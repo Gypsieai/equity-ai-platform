@@ -1,0 +1,144 @@
+2026-01-29 14:24:16.764 [info] [Main] Using Cloud Code URL: https://daily-cloudcode-pa.googleapis.com
+2026-01-29 14:24:16.764 [info] [Main] [BrowserOnboardingClientMainService] Starting browser onboarding server
+2026-01-29 14:24:16.765 [info] [Main] [BrowserOnboardingClientServer] Browser onboarding server started on http://localhost:57828
+2026-01-29 14:24:16.807 [info] [Main] update#setState idle
+2026-01-29 14:24:19.143 [error] [Remote Tunnel Service] Missing 'tunnelApplicationConfig' or 'tunnelApplicationName' in product.json. Remote tunneling is not available.
+2026-01-29 14:24:19.448 [info] [Git] [main] Log level: Info
+2026-01-29 14:24:19.448 [info] [Git] [main] Validating found git in: "C:\Program Files\Git\cmd\git.exe"
+2026-01-29 14:24:19.498 [info] [Git] [main] Using git "2.52.0.windows.1" from "C:\Program Files\Git\cmd\git.exe"
+2026-01-29 14:24:19.498 [info] [Git] [Model][doInitialScan] Initial repository scan started
+2026-01-29 14:24:20.084 [info] [Git] > git rev-parse --show-toplevel [444ms]
+2026-01-29 14:24:20.084 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:20.155 [info] [GitHub] Log level: Info
+2026-01-29 14:24:20.168 [info] [Python] Experiment 'pythonSurveyNotificationcf' is active
+2026-01-29 14:24:20.168 [warning] [Python] Dir "c:\APEX_NEXUS_SYSTEM\.pixi\envs" is not watchable (directory does not exist)
+2026-01-29 14:24:20.189 [info] [Git] > git rev-parse --show-toplevel [60ms]
+2026-01-29 14:24:20.189 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:20.243 [info] [Python] Skipping ActivatedEnv Detection:  process.env.VSCODE_CLI !== '1'
+2026-01-29 14:24:20.247 [info] [Python] Python interpreter path: .\.venv\Scripts\python.exe
+2026-01-29 14:24:20.248 [info] [Git] > git rev-parse --show-toplevel [55ms]
+2026-01-29 14:24:20.248 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:20.266 [info] [Python] > pyenv which python
+2026-01-29 14:24:20.266 [info] [Python] cwd: .
+2026-01-29 14:24:20.307 [info] [Python] Editor support is inactive since language server is set to None.
+2026-01-29 14:24:20.308 [info] [Git] > git rev-parse --show-toplevel [56ms]
+2026-01-29 14:24:20.308 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:20.537 [info] [Main] AntigravityAuthMainService initialized
+2026-01-29 14:24:20.845 [info] [Git] > git rev-parse --show-toplevel [532ms]
+2026-01-29 14:24:20.845 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:20.895 [info] [Antigravity] 2026/01/29 14:24:20 maxprocs: Leaving GOMAXPROCS=22: CPU quota undefined
+2026-01-29 14:24:20.915 [info] [Git] > git rev-parse --show-toplevel [50ms]
+2026-01-29 14:24:20.915 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:20.955 [info] [Antigravity] I0129 14:24:20.954482 18808 server.go:1152] Starting language server process with pid 18808
+2026-01-29 14:24:20.955 [info] [Antigravity] I0129 14:24:20.954482 18808 server.go:287] Setting GOMAXPROCS to 4
+2026-01-29 14:24:20.959 [info] [Antigravity] I0129 14:24:20.958999 18808 server.go:479] Language server will attempt to listen on host 127.0.0.1
+2026-01-29 14:24:20.961 [info] [Antigravity] I0129 14:24:20.959995 18808 server.go:494] Language server listening on random port at 57841 for HTTPS
+2026-01-29 14:24:20.961 [info] [Antigravity] I0129 14:24:20.959995 18808 server.go:501] Language server listening on random port at 57842 for HTTP
+2026-01-29 14:24:20.976 [info] [Git] > git rev-parse --show-toplevel [57ms]
+2026-01-29 14:24:20.977 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:21.030 [info] [Git] > git rev-parse --show-toplevel [49ms]
+2026-01-29 14:24:21.030 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:21.093 [info] [Git] > git rev-parse --show-toplevel [56ms]
+2026-01-29 14:24:21.093 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:21.150 [info] [Git] > git rev-parse --show-toplevel [53ms]
+2026-01-29 14:24:21.150 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:21.200 [info] [Git] > git rev-parse --show-toplevel [45ms]
+2026-01-29 14:24:21.200 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:21.249 [info] [Git] > git rev-parse --show-toplevel [46ms]
+2026-01-29 14:24:21.250 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:21.253 [info] [Git] [Model][doInitialScan] Initial repository scan completed - repositories (0), closed repositories (0), parent repositories (0), unsafe repositories (0)
+2026-01-29 14:24:21.303 [info] [Git] > git rev-parse --show-toplevel [46ms]
+2026-01-29 14:24:21.303 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:21.384 [info] [Antigravity] I0129 14:24:21.384446 18808 server.go:472] Created extension server client at port 57837
+2026-01-29 14:24:21.522 [info] [Antigravity] W0129 14:24:21.521633 18808 client.go:137] failed to set auth token
+2026-01-29 14:24:21.524 [info] [Antigravity] W0129 14:24:21.523270 18808 log_context.go:106] Cache(userInfo): Singleflight refresh failed: You are not logged into Antigravity.
+2026-01-29 14:24:21.535 [info] [Antigravity] (Antigravity) 2026-01-29 14:24:21.535 [INFO]: Language server started
+2026-01-29 14:24:21.541 [info] [Antigravity] I0129 14:24:21.540308 18808 server.go:1504] initialized server successfully in 585.8259ms
+2026-01-29 14:24:21.583 [info] [Antigravity] 2026/01/29 14:24:21 http: TLS handshake error from 127.0.0.1:57862: read tcp 127.0.0.1:57841->127.0.0.1:57862: wsarecv: An established connection was aborted by the software in your host machine.
+2026-01-29 14:24:21.583 [info] [Antigravity] 2026/01/29 14:24:21 http: TLS handshake error from 127.0.0.1:57861: remote error: tls: unknown certificate
+2026-01-29 14:24:21.614 [info] [Antigravity] (Antigravity) 2026-01-29 14:24:21.614 [INFO]: LS lspClient started successfully
+2026-01-29 14:24:22.122 [info] [Git] > git rev-parse --show-toplevel [54ms]
+2026-01-29 14:24:22.122 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:22.251 [info] [Git] > git rev-parse --show-toplevel [63ms]
+2026-01-29 14:24:22.251 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:22.309 [info] [Git] > git rev-parse --show-toplevel [51ms]
+2026-01-29 14:24:22.309 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:25.199 [info] [Git] > git rev-parse --show-toplevel [47ms]
+2026-01-29 14:24:25.199 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:25.251 [info] [Git] > git rev-parse --show-toplevel [47ms]
+2026-01-29 14:24:25.251 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:25.302 [info] [Git] > git rev-parse --show-toplevel [47ms]
+2026-01-29 14:24:25.302 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:27.817 [info] [Antigravity] I0129 14:24:27.777786 18808 http_helpers.go:124] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x5d982b9489b605e
+2026-01-29 14:24:28.106 [info] [TypeScript] Starting TS Server
+2026-01-29 14:24:28.106 [info] [TypeScript] Using tsserver from: c:\Users\Mizzi\AppData\Local\Programs\Antigravity\resources\app\extensions\node_modules\typescript\lib\tsserver.js
+2026-01-29 14:24:28.106 [info] [TypeScript] <syntax> Forking...
+2026-01-29 14:24:28.106 [info] [TypeScript] <syntax> Starting...
+2026-01-29 14:24:28.106 [info] [TypeScript] <semantic> Forking...
+2026-01-29 14:24:28.106 [info] [TypeScript] <semantic> Starting...
+2026-01-29 14:24:28.311 [info] [Antigravity] I0129 14:24:28.310101 18808 http_helpers.go:124] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:streamGenerateContent?alt=sse Trace: 0x8caf6171acb77224
+2026-01-29 14:24:46.810 [info] [Main] update#setState checking for updates
+2026-01-29 14:24:47.051 [info] [Main] update#setState idle
+2026-01-29 14:24:53.732 [info] [Git] > git rev-parse --show-toplevel [39ms]
+2026-01-29 14:24:53.732 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:24:53.923 [error] [Python] Unable to find workspace for given file
+2026-01-29 14:25:55.452 [info] [Git] > git rev-parse --show-toplevel [42ms]
+2026-01-29 14:25:55.452 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 14:25:55.656 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:24:46.814 [info] [Main] update#setState checking for updates
+2026-01-29 15:24:47.194 [info] [Main] update#setState idle
+2026-01-29 15:28:38.139 [info] [Git] > git rev-parse --show-toplevel [52ms]
+2026-01-29 15:28:38.139 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:28:38.313 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:28:41.715 [info] [Git] > git rev-parse --show-toplevel [39ms]
+2026-01-29 15:28:41.715 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:28:41.907 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:28:42.875 [info] [Git] > git rev-parse --show-toplevel [39ms]
+2026-01-29 15:28:42.875 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:28:43.075 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:28:44.839 [info] [Git] > git rev-parse --show-toplevel [44ms]
+2026-01-29 15:28:44.840 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:28:45.008 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:28:49.946 [info] [Git] > git rev-parse --show-toplevel [48ms]
+2026-01-29 15:28:49.946 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:28:50.132 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:28:50.414 [info] [Antigravity] E0129 15:28:50.413760 18808 log.go:354] queryText was truncated because it was longer than the allowed byte length 1500
+2026-01-29 15:28:50.731 [info] [Git] > git rev-parse --show-toplevel [43ms]
+2026-01-29 15:28:50.731 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:28:50.916 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:28:51.190 [info] [Antigravity] E0129 15:28:51.189949 18808 log.go:354] queryText was truncated because it was longer than the allowed byte length 1500
+2026-01-29 15:28:51.586 [info] [Git] > git rev-parse --show-toplevel [45ms]
+2026-01-29 15:28:51.586 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:28:51.776 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:28:52.043 [info] [Antigravity] E0129 15:28:52.042946 18808 log.go:354] queryText was truncated because it was longer than the allowed byte length 1500
+2026-01-29 15:29:18.242 [info] [Git] > git rev-parse --show-toplevel [43ms]
+2026-01-29 15:29:18.242 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:29:18.422 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:29:24.860 [info] [Git] > git rev-parse --show-toplevel [44ms]
+2026-01-29 15:29:24.860 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:29:25.046 [error] [Python] Unable to find workspace for given file
+2026-01-29 15:30:32.994 [info] [Antigravity] E0129 15:30:32.994188 18808 log.go:354] queryText was truncated because it was longer than the allowed byte length 1500
+2026-01-29 15:30:33.013 [info] [Git] > git rev-parse --show-toplevel [71ms]
+2026-01-29 15:30:33.013 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:30:33.062 [info] [Git] > git rev-parse --show-toplevel [43ms]
+2026-01-29 15:30:33.062 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:30:33.134 [info] [Git] > git rev-parse --show-toplevel [68ms]
+2026-01-29 15:30:33.134 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:30:33.503 [info] [Antigravity] E0129 15:30:33.503298 18808 log.go:354] queryText was truncated because it was longer than the allowed byte length 1500
+2026-01-29 15:30:34.606 [info] [Git] > git rev-parse --show-toplevel [49ms]
+2026-01-29 15:30:34.606 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:30:34.653 [info] [Git] > git rev-parse --show-toplevel [44ms]
+2026-01-29 15:30:34.654 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:34:17.120 [info] [Git] > git rev-parse --show-toplevel [61ms]
+2026-01-29 15:34:17.120 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:34:17.190 [info] [Git] > git rev-parse --show-toplevel [65ms]
+2026-01-29 15:34:17.190 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:34:25.906 [info] [Git] > git rev-parse --show-toplevel [44ms]
+2026-01-29 15:34:25.906 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:34:25.948 [info] [Git] > git rev-parse --show-toplevel [38ms]
+2026-01-29 15:34:25.948 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:34:25.988 [info] [Git] > git rev-parse --show-toplevel [36ms]
+2026-01-29 15:34:25.988 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:34:26.027 [info] [Git] > git rev-parse --show-toplevel [34ms]
+2026-01-29 15:34:26.027 [info] [Git] fatal: not a git repository (or any of the parent directories): .git
+2026-01-29 15:36:21.609 [info] [GitHub] Log level: Trace

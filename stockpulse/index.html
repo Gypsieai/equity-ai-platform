@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockPulse AI - Neural Market Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'], display: ['Orbitron'] },
+                    colors: {
+                        'void': '#03050a', 'abyss': '#080c14', 'obsidian': '#0d1219', 'slate': '#141b26',
+                        'steel': '#1c2536', 'smoke': '#2a3548', 'mist': '#3d4b5f',
+                        'neon-blue': '#00b4ff', 'neon-cyan': '#00fff2', 'neon-green': '#00ff88',
+                        'neon-purple': '#a855f7', 'neon-pink': '#ff006e', 'neon-gold': '#ffd700',
+                        'profit': '#00ff88', 'loss': '#ff3860', 'neutral': '#6b7280',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #1c2536 transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1c2536;
+            border-radius: 3px;
+        }
+
+        body {
+            background: radial-gradient(ellipse at top, #0d1219 0%, #03050a 50%, #000 100%);
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: linear-gradient(135deg, rgba(13, 18, 25, 0.9) 0%, rgba(8, 12, 20, 0.95) 100%);
+            backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(0, 180, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-hover:hover {
+            border-color: rgba(0, 180, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 180, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Neon Effects */
+        .neon-glow {
+            box-shadow: 0 0 30px rgba(0, 180, 255, 0.3), 0 0 60px rgba(0, 180, 255, 0.1);
+        }
+
+        .neon-text {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #00b4ff 0%, #00fff2 50%, #00ff88 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-border {
+            background: linear-gradient(135deg, rgba(0, 180, 255, 0.3) 0%, rgba(0, 255, 136, 0.3) 100%);
+            padding: 1px;
+        }
+
+        /* Animations */
+        @keyframes pulse-neon {
+
+            0%,
+            100% {
+                opacity: 1;
+                filter: brightness(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                filter: brightness(1.2);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes scan {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+
+        @keyframes ticker-scroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes data-flow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes rotate-gradient {
+            0% {
+                --angle: 0deg;
+            }
+
+            100% {
+                --angle: 360deg;
+            }
+        }
+
+        .pulse-neon {
+            animation: pulse-neon 2s ease-in-out infinite;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .ticker-scroll {
+            animation: ticker-scroll 60s linear infinite;
+        }
+
+        .data-flow {
+            background: linear-gradient(90deg, #00b4ff, #00fff2, #00ff88, #00b4ff);
+            background-size: 300% 100%;
+            animation: data-flow 3s ease infinite;
+        }
+
+        /* Confidence Ring */
+        .conf-ring {
+            position: relative;
+        }
+
+        .conf-ring::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #00ff88 calc(var(--conf) * 3.6deg), transparent 0);
+            mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+        }
+
+        /* Card Enhancements */
+        .card-bullish {
+            border-left: 3px solid #00ff88;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, transparent 100%);
+        }
+
+        .card-bearish {
+            border-left: 3px solid #ff3860;
+            background: linear-gradient(135deg, rgba(255, 56, 96, 0.05) 0%, transparent 100%);
+        }
+
+        .card-neutral {
+            border-left: 3px solid #6b7280;
+        }
+
+        /* Sidebar */
+        .sidebar-item {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, rgba(0, 180, 255, 0.2) 0%, transparent 100%);
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-item:hover::before,
+        .sidebar-item.active::before {
+            width: 100%;
+        }
+
+        .sidebar-item.active {
+            border-left: 3px solid #00b4ff;
+            background: rgba(0, 180, 255, 0.1);
+        }
+
+        /* Live Indicator */
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
+            animation: pulse-neon 1s infinite;
+        }
+
+        /* Toast */
+        .toast-enter {
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Table Row Hover */
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 180, 255, 0.05) !important;
+        }
+
+        /* Mini Chart */
+        .mini-chart {
+            height: 40px;
+            display: flex;
+            align-items: flex-end;
+            gap: 1px;
+        }
+
+        .mini-bar {
+            width: 3px;
+            border-radius: 1px;
+            transition: height 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="h-screen overflow-hidden flex text-gray-300 font-sans antialiased">
+    <!-- Ambient Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-blue/5 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-neon-purple/5 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="w-72 bg-abyss/80 backdrop-blur-xl border-r border-steel/50 flex flex-col z-10 relative">
+        <!-- Logo -->
+        <div class="p-6 border-b border-steel/50">
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-gradient-to-br from-neon-blue to-neon-cyan flex items-center justify-center shadow-lg shadow-neon-blue/30">
+                    <i class="fas fa-bolt-lightning text-xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-xl tracking-wider gradient-text">STOCKPULSE</h1>
+                    <div class="flex items-center gap-2 mt-1">
+                        <div class="live-dot"></div>
+                        <span class="text-[10px] font-bold text-neon-green tracking-widest uppercase">Neural AI
+                            Active</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1">
+            <div class="px-3 mb-4 text-[10px] font-bold text-mist uppercase tracking-[0.2em]">Trading Hub</div>
+            <a href="#"
+                class="sidebar-item active flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium text-neon-blue"><i
+                    class="fas fa-chart-line w-5 text-center"></i>Dashboard</a>
+            <a href="#"
+                class="sidebar-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium hover:text-white"><i
+                    class="fas fa-brain w-5 text-center text-neon-purple"></i>AI Predictions<span
+                    class="ml-auto px-2 py-0.5 text-[10px] font-bold bg-profit/20 text-profit rounded-full">87%</span></a>
+            <a href="#"
+                class="sidebar-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium hover:text-white"><i
+                    class="fas fa-crosshairs w-5 text-center text-neon-cyan"></i>Scanner<span
+                    class="ml-auto px-2 py-0.5 text-[10px] font-bold bg-neon-blue/20 text-neon-blue rounded-full"
+                    id="scanCount">0</span></a>
+            <a href="#"
+                class="sidebar-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium hover:text-white"><i
+                    class="fas fa-fire w-5 text-center text-neon-gold"></i>Hot Picks</a>
+
+            <div class="px-3 mt-8 mb-4 text-[10px] font-bold text-mist uppercase tracking-[0.2em]">Intelligence</div>
+            <a href="#"
+                class="sidebar-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium hover:text-white"><i
+                    class="fas fa-layer-group w-5 text-center"></i>Sectors</a>
+            <a href="#"
+                class="sidebar-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium hover:text-white"
+                onclick="openAlertModal()"><i class="fas fa-bell w-5 text-center text-loss"></i>Alerts<span
+                    class="ml-auto w-2 h-2 bg-loss rounded-full pulse-neon" id="alertPulse"></span></a>
+            <a href="#"
+                class="sidebar-item flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium hover:text-white"><i
+                    class="fas fa-newspaper w-5 text-center"></i>News Feed</a>
+        </nav>
+
+        <!-- Stats Card -->
+        <div class="p-4">
+            <div class="glass rounded-2xl p-5 neon-glow">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-medium text-mist">AI Engine Performance</span>
+                    <span class="text-xs font-mono text-profit">+12.4%</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <div class="text-2xl font-bold text-white font-mono">87.3<span
+                                class="text-sm text-profit">%</span></div>
+                        <div class="text-[10px] text-mist mt-1">Accuracy</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-white font-mono">142</div>
+                        <div class="text-[10px] text-mist mt-1">Signals/Day</div>
+                    </div>
+                </div>
+                <div class="h-1.5 bg-steel rounded-full overflow-hidden">
+                    <div class="h-full data-flow rounded-full" style="width:87.3%"></div>
+                </div>
+                <div class="mt-3 flex items-center gap-2 text-[10px]">
+                    <span id="wsStatus" class="flex items-center gap-1.5 text-profit"><i
+                            class="fas fa-wifi"></i>Connected</span>
+                    <span class="text-mist">|</span>
+                    <span class="text-mist" id="latency">12ms</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+        <!-- Header -->
+        <header
+            class="h-16 bg-abyss/60 backdrop-blur-xl border-b border-steel/30 flex items-center justify-between px-6 z-10">
+            <div class="flex items-center gap-6">
+                <div class="relative">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-mist text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="Search markets..."
+                        class="w-96 bg-slate/50 border border-steel/50 rounded-xl pl-11 pr-4 py-2.5 text-sm focus:outline-none focus:border-neon-blue/50 focus:bg-slate transition-all placeholder:text-mist">
+                </div>
+                <div class="flex items-center gap-3 px-4 py-2 rounded-xl bg-profit/10 border border-profit/20">
+                    <div class="live-dot"></div>
+                    <span class="text-xs font-bold text-profit tracking-wide">MARKET OPEN</span>
+                    <span class="text-xs text-mist" id="marketTime">9:47:19 AM</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="openAlertModal()"
+                    class="relative w-10 h-10 rounded-xl bg-slate/50 border border-steel/50 flex items-center justify-center hover:border-neon-blue/50 hover:bg-slate transition-all group">
+                    <i class="fas fa-bell text-sm group-hover:text-neon-blue transition-colors"></i>
+                    <span
+                        class="absolute -top-1 -right-1 min-w-5 h-5 bg-loss rounded-full text-[10px] font-bold flex items-center justify-center px-1"
+                        id="alertCount">0</span>
+                </button>
+                <button
+                    class="w-10 h-10 rounded-xl bg-slate/50 border border-steel/50 flex items-center justify-center hover:border-neon-blue/50 hover:bg-slate transition-all"><i
+                        class="fas fa-cog text-sm"></i></button>
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-blue to-neon-purple flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-neon-blue/20">
+                    AI</div>
+            </div>
+        </header>
+
+        <!-- Ticker Tape -->
+        <div class="h-11 bg-obsidian/80 border-b border-steel/30 flex items-center overflow-hidden">
+            <div class="ticker-scroll flex items-center gap-8 text-sm whitespace-nowrap px-4" id="ticker"></div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            <!-- Index Cards -->
+            <div class="grid grid-cols-4 gap-5" id="indexCards"></div>
+
+            <!-- Main Grid -->
+            <div class="grid grid-cols-12 gap-6">
+                <!-- Chart Panel -->
+                <div class="col-span-8 glass glass-hover rounded-2xl p-6 relative overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-neon-blue/5 rounded-full blur-3xl pointer-events-none">
+                    </div>
+                    <div class="flex items-start justify-between mb-6 relative">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <h2 class="text-2xl font-bold text-white font-display tracking-wide" id="chartSymbol">
+                                    NVDA</h2>
+                                <span
+                                    class="px-3 py-1 text-[10px] font-bold bg-profit/20 text-profit rounded-full border border-profit/30">BULLISH</span>
+                                <span
+                                    class="px-2 py-1 text-[10px] font-medium bg-neon-purple/20 text-neon-purple rounded-full">AI
+                                    ACTIVE</span>
+                            </div>
+                            <p class="text-sm text-mist" id="chartName">NVIDIA Corporation</p>
+                            <div class="flex items-center gap-6 mt-3">
+                                <div><span class="text-3xl font-bold text-white font-mono"
+                                        id="chartPrice">$878.35</span></div>
+                                <div class="flex items-center gap-2" id="chartChange"><span
+                                        class="text-xl font-bold text-profit">+2.47%</span><i
+                                        class="fas fa-arrow-up text-profit"></i></div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end gap-3">
+                            <div class="flex gap-2" id="timeframes">
+                                <button
+                                    class="tf-btn px-3 py-1.5 text-xs rounded-lg bg-slate/50 border border-steel/50 hover:border-neon-blue/50 transition"
+                                    data-tf="1D">1D</button>
+                                <button
+                                    class="tf-btn px-3 py-1.5 text-xs rounded-lg bg-neon-blue/20 border border-neon-blue/50 text-neon-blue"
+                                    data-tf="1W">1W</button>
+                                <button
+                                    class="tf-btn px-3 py-1.5 text-xs rounded-lg bg-slate/50 border border-steel/50 hover:border-neon-blue/50 transition"
+                                    data-tf="1M">1M</button>
+                                <button
+                                    class="tf-btn px-3 py-1.5 text-xs rounded-lg bg-slate/50 border border-steel/50 hover:border-neon-blue/50 transition"
+                                    data-tf="3M">3M</button>
+                            </div>
+                            <button onclick="openAlertModalFor(selectedStock?.ticker)"
+                                class="px-4 py-2 text-xs font-medium rounded-xl bg-loss/20 border border-loss/30 text-loss hover:bg-loss/30 transition-all flex items-center gap-2"><i
+                                    class="fas fa-bell"></i>Set Alert</button>
+                        </div>
+                    </div>
+                    <div class="h-72 relative">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                    <!-- AI Forecast Panel -->
+                    <div
+                        class="absolute bottom-6 right-6 glass rounded-2xl p-4 w-56 border border-neon-green/20 bg-obsidian/90">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-[10px] font-bold text-mist uppercase tracking-wider">AI Forecast</span>
+                            <span class="text-[10px] text-neon-cyan">7-Day</span>
+                        </div>
+                        <div class="text-3xl font-bold font-mono mb-2" id="forecastValue"><span
+                                class="text-profit">+4.2%</span></div>
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-mist">Confidence</span>
+                            <span class="font-bold text-profit" id="forecastConf">89%</span>
+                        </div>
+                        <div class="h-1.5 bg-steel rounded-full overflow-hidden mt-2">
+                            <div class="h-full bg-gradient-to-r from-neon-green to-neon-cyan rounded-full transition-all"
+                                id="confBar" style="width:89%"></div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-steel/50 text-xs" id="patternInfo"></div>
+                    </div>
+                </div>
+
+                <!-- Predictions Panel -->
+                <div class="col-span-4 glass glass-hover rounded-2xl p-5">
+                    <div class="flex items-center justify-between mb-5">
+                        <h3 class="font-bold text-white flex items-center gap-2"><i
+                                class="fas fa-brain text-neon-purple"></i>Live Signals</h3>
+                        <span class="text-[10px] font-medium text-mist">Updated: <span id="signalTime">just
+                                now</span></span>
+                    </div>
+                    <div class="space-y-3" id="predictions"></div>
+                </div>
+            </div>
+
+            <!-- Watchlist -->
+            <div class="glass rounded-2xl overflow-hidden">
+                <div class="p-5 border-b border-steel/30 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <h3 class="font-bold text-white text-lg flex items-center gap-3"><i
+                                class="fas fa-radar text-neon-cyan"></i>AI Watchlist</h3>
+                        <span
+                            class="px-3 py-1 text-xs font-medium bg-neon-blue/10 text-neon-blue rounded-full border border-neon-blue/20"
+                            id="stockCount">40 stocks</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <select id="sectorFilter"
+                            class="bg-slate/50 border border-steel/50 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-neon-blue/50 transition-all"></select>
+                        <select id="sortBy"
+                            class="bg-slate/50 border border-steel/50 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-neon-blue/50">
+                            <option value="aiScore">AI Score</option>
+                            <option value="change1D">Daily Change</option>
+                            <option value="price">Price</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="text-[11px] text-mist uppercase tracking-wider bg-obsidian/50">
+                            <tr>
+                                <th class="px-5 py-4 text-left font-semibold">#</th>
+                                <th class="px-5 py-4 text-left font-semibold">Asset</th>
+                                <th class="px-5 py-4 text-center font-semibold">Price</th>
+                                <th class="px-5 py-4 text-center font-semibold">24h</th>
+                                <th class="px-5 py-4 text-center font-semibold">7d Trend</th>
+                                <th class="px-5 py-4 text-center font-semibold">AI Score</th>
+                                <th class="px-5 py-4 text-center font-semibold">Signal</th>
+                                <th class="px-5 py-4 text-center font-semibold">Target</th>
+                                <th class="px-5 py-4 text-center font-semibold">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="watchlist" class="divide-y divide-steel/20"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Alert Modal -->
+    <div id="alertModal"
+        class="fixed inset-0 bg-void/90 backdrop-blur-xl hidden z-50 flex items-center justify-center p-4">
+        <div class="glass rounded-3xl w-full max-w-lg p-8 border border-neon-blue/20 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-48 h-48 bg-neon-blue/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <button onclick="closeAlertModal()"
+                class="absolute top-6 right-6 w-10 h-10 rounded-xl bg-slate/50 flex items-center justify-center text-mist hover:text-white hover:bg-slate transition-all"><i
+                    class="fas fa-times"></i></button>
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold text-white flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-loss/20 flex items-center justify-center"><i
+                            class="fas fa-bell text-loss"></i></div>Create Alert
+                </h3>
+                <p class="text-sm text-mist mt-2">Get notified when conditions are met</p>
+            </div>
+            <form id="alertForm" class="space-y-5">
+                <div><label
+                        class="block text-xs font-medium text-mist mb-2 uppercase tracking-wider">Symbol</label><input
+                        type="text" id="alertSymbol"
+                        class="w-full bg-slate/50 border border-steel/50 rounded-xl px-4 py-3 text-white font-mono focus:border-neon-blue/50 focus:outline-none transition-all uppercase"
+                        placeholder="AAPL" required></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label
+                            class="block text-xs font-medium text-mist mb-2 uppercase tracking-wider">Condition</label><select
+                            id="alertType"
+                            class="w-full bg-slate/50 border border-steel/50 rounded-xl px-4 py-3 text-white focus:border-neon-blue/50 focus:outline-none transition-all">
+                            <option value="price_above">Price Above</option>
+                            <option value="price_below">Price Below</option>
+                            <option value="confidence">Confidence &gt; %</option>
+                            <option value="pattern">Pattern Detected</option>
+                        </select></div>
+                    <div><label
+                            class="block text-xs font-medium text-mist mb-2 uppercase tracking-wider">Value</label><input
+                            type="number" step="0.01" id="alertValue"
+                            class="w-full bg-slate/50 border border-steel/50 rounded-xl px-4 py-3 text-white font-mono focus:border-neon-blue/50 focus:outline-none transition-all"
+                            placeholder="150.00"></div>
+                </div>
+                <div><label class="block text-xs font-medium text-mist mb-3 uppercase tracking-wider">Priority</label>
+                    <div class="grid grid-cols-4 gap-3"><button type="button"
+                            class="priority-btn px-4 py-3 rounded-xl border border-steel/50 text-xs font-medium transition-all hover:border-mist"
+                            data-priority="low">Low</button><button type="button"
+                            class="priority-btn px-4 py-3 rounded-xl border border-neon-blue/50 text-neon-blue text-xs font-medium"
+                            data-priority="medium">Medium</button><button type="button"
+                            class="priority-btn px-4 py-3 rounded-xl border border-neon-gold/50 text-neon-gold text-xs font-medium bg-neon-gold/10"
+                            data-priority="high">High</button><button type="button"
+                            class="priority-btn px-4 py-3 rounded-xl border border-loss/50 text-loss text-xs font-medium"
+                            data-priority="critical">Critical</button></div>
+                </div>
+                <div class="flex gap-4 pt-4"><button type="button" onclick="closeAlertModal()"
+                        class="flex-1 px-6 py-3 border border-steel/50 rounded-xl text-mist font-medium hover:text-white hover:border-steel transition-all">Cancel</button><button
+                        type="submit"
+                        class="flex-1 px-6 py-3 bg-gradient-to-r from-neon-blue to-neon-cyan text-white font-bold rounded-xl shadow-lg shadow-neon-blue/30 hover:shadow-neon-blue/50 transition-all flex items-center justify-center gap-2"><i
+                            class="fas fa-plus"></i>Create Alert</button></div>
+            </form>
+            <div class="mt-6 pt-6 border-t border-steel/30">
+                <h4 class="text-sm font-medium text-white mb-4">Active Alerts</h4>
+                <div class="space-y-2 max-h-32 overflow-y-auto" id="activeAlerts">
+                    <p class="text-xs text-mist">No active alerts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-20 right-6 z-50 space-y-3"></div>
+
+    <script>
+        const API_URL = 'http://localhost:8000', WS_URL = 'ws://localhost:8000';
+        let stocks = [], mainChart = null, selectedStock = null, ws = null, alerts = [], selectedPriority = 'high';
+
+        // WebSocket
+        function connectWS() {
+            ws = new WebSocket(`${WS_URL}/ws/stream`);
+            ws.onopen = () => {
+                document.getElementById('wsStatus').innerHTML = '<i class="fas fa-wifi"></i> Connected';
+                document.getElementById('wsStatus').className = 'flex items-center gap-1.5 text-profit';
+            };
+            ws.onmessage = (e) => {
+                const msg = JSON.parse(e.data);
+                if (msg.type === 'market_update') updateMarketData(msg.data);
+                else if (msg.type === 'alert_trigger') showToast(msg.data.message, msg.data.priority);
+            };
+            ws.onclose = () => {
+                document.getElementById('wsStatus').innerHTML = '<i class="fas fa-wifi-slash"></i> Reconnecting...';
+                document.getElementById('wsStatus').className = 'flex items-center gap-1.5 text-loss';
+                setTimeout(connectWS, 3000);
+            };
+        }
+
+        function updateMarketData(data) {
+            data.forEach(u => {
+                const s = stocks.find(x => x.ticker === u.symbol);
+                if (s) { s.price = u.price; s.change1D = u.change; s._pred = u.prediction; }
+            });
+            renderTicker(); renderWatchlist(); if (selectedStock) updateSelectedStock();
+        }
+
+        async function loadStocks() {
+            try { const r = await fetch(`${API_URL}/api/stocks`); if (r.ok) stocks = await r.json(); }
+            catch { try { const r = await fetch('../data/stocks.json'); stocks = await r.json(); } catch { } }
+            init();
+        }
+
+        function init() {
+            renderTicker(); renderIndexCards(); renderWatchlist(); renderPredictions(); populateSectors();
+            if (stocks.length) selectStock(stocks[0].ticker);
+            setInterval(updateClock, 1000); updateClock();
+            document.getElementById('stockCount').textContent = `${stocks.length} stocks`;
+            document.getElementById('scanCount').textContent = stocks.length;
+            connectWS();
+            setInterval(() => { if (!ws || ws.readyState !== WebSocket.OPEN) simUpdate(); }, 3000);
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('marketTime').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        function renderTicker() {
+            const html = stocks.slice(0, 20).map(s => `<div class="flex items-center gap-3 cursor-pointer hover:text-white transition" onclick="selectStock('${s.ticker}')"><span class="font-bold text-white">${s.ticker}</span><span class="font-mono text-mist">$${s.price.toFixed(2)}</span><span class="${s.change1D >= 0 ? 'text-profit' : 'text-loss'} font-mono">${s.change1D >= 0 ? '+' : ''}${s.change1D.toFixed(2)}%</span></div>`).join('');
+            document.getElementById('ticker').innerHTML = html + html;
+        }
+
+        function renderIndexCards() {
+            const indices = [{ n: 'S&P 500', v: '4,783.45', c: 1.24, p: 'Bullish', cf: 78 }, { n: 'NASDAQ', v: '16,892.12', c: 2.14, p: 'Strong Buy', cf: 85 }, { n: 'DOW JONES', v: '37,656.32', c: 0.76, p: 'Hold', cf: 62 }, { n: 'VIX', v: '13.42', c: -5.23, p: 'Low Volatility', cf: 91 }];
+            document.getElementById('indexCards').innerHTML = indices.map((i, idx) => `
+            <div class="glass glass-hover rounded-2xl p-5 cursor-pointer ${idx === 1 ? 'neon-glow' : ''}">
+                <div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-mist">${i.n}</span><span class="text-xs font-bold ${i.c >= 0 ? 'text-profit' : 'text-loss'} font-mono">${i.c >= 0 ? '+' : ''}${i.c}%</span></div>
+                <div class="text-2xl font-bold text-white font-mono mb-3">${i.v}</div>
+                <div class="flex items-center justify-between"><span class="text-[10px] px-2 py-1 rounded-full ${i.c >= 0 ? 'bg-profit/10 text-profit border border-profit/20' : 'bg-loss/10 text-loss border border-loss/20'}">${i.p}</span><div class="w-16 h-1.5 bg-steel rounded-full overflow-hidden"><div class="h-full ${i.cf > 70 ? 'bg-profit' : i.cf > 50 ? 'bg-neon-blue' : 'bg-neon-gold'} rounded-full" style="width:${i.cf}%"></div></div></div>
+            </div>
+        `).join('');
+        }
+
+        function renderWatchlist(filter = 'All') {
+            let list = filter === 'All' ? [...stocks] : stocks.filter(s => s.sector === filter);
+            const sort = document.getElementById('sortBy')?.value || 'aiScore';
+            list.sort((a, b) => b[sort] - a[sort]);
+
+            document.getElementById('watchlist').innerHTML = list.slice(0, 15).map((s, i) => {
+                const pred = s._pred || { direction: s.sentiment.toLowerCase(), confidence: s.aiScore / 100, target_price: s.price * (1 + s.aiScore / 500) };
+                const trend = Array.from({ length: 7 }, () => 20 + Math.random() * 60);
+                return `
+            <tr class="cursor-pointer transition-all" onclick="selectStock('${s.ticker}')">
+                <td class="px-5 py-4 text-mist font-mono">${i + 1}</td>
+                <td class="px-5 py-4">
+                    <div class="flex items-center gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-neon-blue/20 to-neon-purple/20 flex items-center justify-center text-sm font-bold text-white border border-steel/30">${s.ticker.slice(0, 2)}</div>
+                        <div><div class="font-semibold text-white">${s.ticker}</div><div class="text-xs text-mist truncate w-32">${s.name}</div></div>
+                    </div>
+                </td>
+                <td class="px-5 py-4 text-center font-mono font-medium text-white">$${s.price.toFixed(2)}</td>
+                <td class="px-5 py-4 text-center"><span class="font-mono font-medium ${s.change1D >= 0 ? 'text-profit' : 'text-loss'}">${s.change1D >= 0 ? '+' : ''}${s.change1D.toFixed(2)}%</span></td>
+                <td class="px-5 py-4"><div class="mini-chart mx-auto w-20">${trend.map(h => `<div class="mini-bar ${s.change1D >= 0 ? 'bg-profit/60' : 'bg-loss/60'}" style="height:${h}%"></div>`).join('')}</div></td>
+                <td class="px-5 py-4"><div class="flex items-center justify-center gap-2"><div class="w-14 h-2 bg-steel rounded-full overflow-hidden"><div class="h-full ${s.aiScore > 80 ? 'bg-profit' : s.aiScore > 60 ? 'bg-neon-blue' : 'bg-neon-gold'} rounded-full" style="width:${s.aiScore}%"></div></div><span class="text-xs font-bold text-white">${s.aiScore}</span></div></td>
+                <td class="px-5 py-4 text-center"><span class="px-3 py-1.5 rounded-lg text-xs font-bold ${pred.direction === 'bullish' ? 'bg-profit/15 text-profit border border-profit/20' : pred.direction === 'bearish' ? 'bg-loss/15 text-loss border border-loss/20' : 'bg-steel text-mist'}">${pred.direction?.toUpperCase() || s.sentiment}</span></td>
+                <td class="px-5 py-4 text-center font-mono text-xs text-mist">$${pred.target_price?.toFixed(2) || '-'}</td>
+                <td class="px-5 py-4 text-center"><button onclick="event.stopPropagation();openAlertModalFor('${s.ticker}')" class="w-9 h-9 rounded-lg bg-loss/10 border border-loss/20 text-loss hover:bg-loss/20 transition-all flex items-center justify-center mx-auto"><i class="fas fa-bell text-xs"></i></button></td>
+            </tr>`;
+            }).join('');
+        }
+
+        function renderPredictions() {
+            const top = [...stocks].sort((a, b) => b.aiScore - a.aiScore).slice(0, 5);
+            document.getElementById('predictions').innerHTML = top.map(s => `
+            <div class="flex items-center gap-4 p-4 rounded-xl ${s.sentiment === 'Bullish' ? 'card-bullish' : s.sentiment === 'Bearish' ? 'card-bearish' : 'card-neutral'} cursor-pointer transition-all hover:scale-[1.02]" onclick="selectStock('${s.ticker}')">
+                <div class="w-12 h-12 rounded-xl ${s.sentiment === 'Bullish' ? 'bg-profit/20 text-profit' : s.sentiment === 'Bearish' ? 'bg-loss/20 text-loss' : 'bg-steel text-mist'} flex items-center justify-center text-lg">
+                    <i class="fas fa-arrow-trend-${s.sentiment === 'Bullish' ? 'up' : s.sentiment === 'Bearish' ? 'down' : 'right'}"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-bold text-white">${s.ticker}</span>
+                        <span class="text-xs font-mono ${s.change1D >= 0 ? 'text-profit' : 'text-loss'}">${s.change1D >= 0 ? '+' : ''}${s.change1D.toFixed(2)}%</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-mist">${s.sector}</span>
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-1.5 bg-steel rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-neon-green to-neon-cyan rounded-full" style="width:${s.aiScore}%"></div></div>
+                            <span class="text-xs font-bold text-profit">${s.aiScore}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        }
+
+        function selectStock(ticker) {
+            const s = stocks.find(x => x.ticker === ticker); if (!s) return;
+            selectedStock = s;
+            updateSelectedStock();
+            renderChart(s);
+        }
+
+        function updateSelectedStock() {
+            const s = selectedStock;
+            document.getElementById('chartSymbol').textContent = s.ticker;
+            document.getElementById('chartName').textContent = s.name;
+            document.getElementById('chartPrice').textContent = `$${s.price.toFixed(2)}`;
+            document.getElementById('chartChange').innerHTML = `<span class="text-xl font-bold ${s.change1D >= 0 ? 'text-profit' : 'text-loss'}">${s.change1D >= 0 ? '+' : ''}${s.change1D.toFixed(2)}%</span><i class="fas fa-arrow-${s.change1D >= 0 ? 'up text-profit' : 'down text-loss'}"></i>`;
+
+            const fc = (s.aiScore / 20 + Math.random() * 2).toFixed(1);
+            document.getElementById('forecastValue').innerHTML = `<span class="${fc > 0 ? 'text-profit' : 'text-loss'}">${fc > 0 ? '+' : ''}${fc}%</span>`;
+            document.getElementById('forecastConf').textContent = `${s.aiScore}%`;
+            document.getElementById('confBar').style.width = `${s.aiScore}%`;
+
+            const patterns = ['Double Bottom', 'Bull Flag', 'Ascending Triangle', 'Cup & Handle', 'Breakout'];
+            document.getElementById('patternInfo').innerHTML = Math.random() > 0.4 ? `<span class="text-neon-purple"><i class="fas fa-chart-line mr-1"></i>${patterns[Math.floor(Math.random() * patterns.length)]}</span>` : '';
+        }
+
+        function renderChart(s) {
+            const labels = [], hist = [], pred = [];
+            let p = s.price * 0.92;
+            for (let i = 0; i < 30; i++) { p += (Math.random() - 0.45) * (s.price * 0.02); hist.push(p); labels.push(new Date(Date.now() - (30 - i) * 86400000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })); }
+            let last = hist[hist.length - 1];
+            for (let i = 0; i < 7; i++) { last += Math.random() * (s.price * 0.015); pred.push(last); labels.push(new Date(Date.now() + i * 86400000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })); }
+
+            if (mainChart) mainChart.destroy();
+            mainChart = new Chart(document.getElementById('mainChart'), {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'Price', data: [...hist, ...Array(7).fill(null)], borderColor: '#00b4ff', backgroundColor: 'rgba(0,180,255,0.1)', borderWidth: 2.5, fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6, pointHoverBackgroundColor: '#00b4ff' },
+                        { label: 'AI Forecast', data: [...Array(30).fill(null), hist[29], ...pred.slice(1)], borderColor: '#00ff88', borderWidth: 2.5, borderDash: [8, 4], fill: false, tension: 0.4, pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { display: true, position: 'top', align: 'end', labels: { color: '#6b7280', font: { size: 11 }, usePointStyle: true, padding: 20 } } },
+                    scales: {
+                        x: { grid: { color: 'rgba(28,37,54,0.5)', drawBorder: false }, ticks: { color: '#6b7280', font: { size: 10 }, maxRotation: 0 } },
+                        y: { grid: { color: 'rgba(28,37,54,0.5)', drawBorder: false }, ticks: { color: '#6b7280', font: { size: 10 } }, position: 'right' }
+                    }
+                }
+            });
+        }
+
+        function populateSectors() {
+            const secs = ['All', ...new Set(stocks.map(s => s.sector))];
+            document.getElementById('sectorFilter').innerHTML = secs.map(s => `<option value="${s}">${s}</option>`).join('');
+            document.getElementById('sectorFilter').onchange = e => renderWatchlist(e.target.value);
+            document.getElementById('sortBy').onchange = () => renderWatchlist(document.getElementById('sectorFilter').value);
+        }
+
+        function simUpdate() {
+            stocks.forEach(s => { s.price *= (1 + (Math.random() - 0.5) * 0.003); s.change1D += (Math.random() - 0.5) * 0.1; });
+            renderTicker(); renderWatchlist(document.getElementById('sectorFilter').value); if (selectedStock) updateSelectedStock();
+        }
+
+        // Alerts
+        function openAlertModal() { document.getElementById('alertModal').classList.remove('hidden'); renderAlerts(); }
+        function closeAlertModal() { document.getElementById('alertModal').classList.add('hidden'); }
+        function openAlertModalFor(t) { document.getElementById('alertSymbol').value = t || ''; openAlertModal(); }
+
+        document.querySelectorAll('.priority-btn').forEach(b => b.onclick = () => { document.querySelectorAll('.priority-btn').forEach(x => x.classList.remove('bg-neon-gold/10', 'bg-neon-blue/10', 'bg-loss/10')); b.classList.add(b.dataset.priority === 'high' ? 'bg-neon-gold/10' : b.dataset.priority === 'critical' ? 'bg-loss/10' : 'bg-neon-blue/10'); selectedPriority = b.dataset.priority; });
+
+        document.getElementById('alertForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const a = { id: 'a' + Date.now(), symbol: document.getElementById('alertSymbol').value.toUpperCase(), type: document.getElementById('alertType').value, value: parseFloat(document.getElementById('alertValue').value) || 0, priority: selectedPriority, triggered: false };
+            alerts.push(a);
+            try { await fetch(`${API_URL}/api/alerts`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(a) }); } catch { }
+            showToast(`Alert created for ${a.symbol}`, 'success');
+            renderAlerts(); updateAlertCount(); e.target.reset();
+        };
+
+        function renderAlerts() { document.getElementById('activeAlerts').innerHTML = alerts.filter(a => !a.triggered).map(a => `<div class="flex items-center justify-between p-3 bg-slate/50 rounded-xl"><div><span class="text-white font-bold">${a.symbol}</span><span class="text-xs text-mist ml-2">${a.type.replace('_', ' ')} ${a.value}</span></div><button onclick="deleteAlert('${a.id}')" class="text-mist hover:text-loss transition"><i class="fas fa-trash-alt text-xs"></i></button></div>`).join('') || '<p class="text-xs text-mist">No active alerts</p>'; }
+        function deleteAlert(id) { alerts = alerts.filter(a => a.id !== id); renderAlerts(); updateAlertCount(); }
+        function updateAlertCount() { document.getElementById('alertCount').textContent = alerts.filter(a => !a.triggered).length; }
+
+        function showToast(msg, type = 'info') {
+            const colors = { success: 'from-profit to-neon-cyan', critical: 'from-loss to-neon-pink', high: 'from-neon-gold to-neon-blue', info: 'from-neon-blue to-neon-purple' };
+            const t = document.createElement('div');
+            t.className = `toast-enter glass rounded-xl px-5 py-4 flex items-center gap-4 border-l-4 ${type === 'critical' ? 'border-loss' : type === 'success' ? 'border-profit' : 'border-neon-blue'}`;
+            t.innerHTML = `<div class="w-10 h-10 rounded-xl bg-gradient-to-br ${colors[type] || colors.info} flex items-center justify-center text-white"><i class="fas fa-bell"></i></div><div class="flex-1"><div class="text-sm font-medium text-white">${msg}</div><div class="text-xs text-mist mt-0.5">${new Date().toLocaleTimeString()}</div></div>`;
+            document.getElementById('toastContainer').appendChild(t);
+            setTimeout(() => t.remove(), 5000);
+        }
+
+        document.getElementById('searchInput').oninput = e => {
+            const q = e.target.value.toUpperCase();
+            if (q.length < 1) { renderWatchlist(document.getElementById('sectorFilter').value); return; }
+            const f = stocks.filter(s => s.ticker.includes(q) || s.name.toUpperCase().includes(q));
+            document.getElementById('watchlist').innerHTML = f.slice(0, 10).map((s, i) => `<tr class="cursor-pointer" onclick="selectStock('${s.ticker}')"><td class="px-5 py-4">${i + 1}</td><td class="px-5 py-4"><span class="font-bold text-white">${s.ticker}</span> <span class="text-mist">${s.name}</span></td><td class="px-5 py-4 text-center font-mono">$${s.price.toFixed(2)}</td><td class="px-5 py-4 text-center ${s.change1D >= 0 ? 'text-profit' : 'text-loss'}">${s.change1D.toFixed(2)}%</td><td class="px-5 py-4"></td><td class="px-5 py-4 text-center">${s.aiScore}</td><td class="px-5 py-4 text-center">${s.sentiment}</td><td class="px-5 py-4">-</td><td class="px-5 py-4"><button onclick="event.stopPropagation();openAlertModalFor('${s.ticker}')" class="text-loss"><i class="fas fa-bell"></i></button></td></tr>`).join('');
+        };
+
+        loadStocks();
+    </script>
+</body>
+
+</html>
